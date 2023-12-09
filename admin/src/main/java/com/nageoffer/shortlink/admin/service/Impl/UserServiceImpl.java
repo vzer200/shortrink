@@ -67,6 +67,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     /**
      * 注册功能
      * 使用redisson分布式锁 防止恶意请求毫秒级触发大量请求去一个未注册的用户名
+     *
+     * 如果恶意请求使用未注册不同用户发起大量请求是防不住的
+     * 只有通过限流等方案保障系统安全
+     *
      * @param requestParam
      */
     @Override
