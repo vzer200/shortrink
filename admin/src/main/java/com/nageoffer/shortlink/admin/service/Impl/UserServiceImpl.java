@@ -1,5 +1,6 @@
 package com.nageoffer.shortlink.admin.service.Impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,12 +8,16 @@ import com.nageoffer.shortlink.admin.common.convention.exception.ClientException
 import com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum;
 import com.nageoffer.shortlink.admin.dao.entity.UserDO;
 import com.nageoffer.shortlink.admin.dao.mapper.UserMapper;
+import com.nageoffer.shortlink.admin.dto.req.UserRegisterReqDto;
 import com.nageoffer.shortlink.admin.dto.resp.UserRespDTO;
 import com.nageoffer.shortlink.admin.service.UserService;
 import org.redisson.api.RBloomFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum.USER_NAME_EXIST;
+import static com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum.USER_SAVE_ERROR;
 
 
 /**
@@ -49,6 +54,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public Boolean hasUsername(String username) {
-      return userRegisterCachePenetrationBloomFilter.contains(username);
+      return !userRegisterCachePenetrationBloomFilter.contains(username);
     }
+
+    @Override
+    public void register(UserRegisterReqDto requestParam) {
+        if (!hasUsername(requestParam.getUsername())) {
+            //当前用户已经存在
+            throw new ClientException(USER_NAME_EXIST);
+        }
+        //用户名不存在 将用户名存入数据库
+        int insert = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
+        if (insert<1){
+            throw new ClientException(USER_SAVE_ERROR);
+        }
+
+        userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+    }
+
+
 }
