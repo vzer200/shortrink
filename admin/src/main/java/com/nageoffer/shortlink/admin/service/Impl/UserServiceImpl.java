@@ -16,6 +16,7 @@ import com.nageoffer.shortlink.admin.dto.req.UserUpdateReqDto;
 import com.nageoffer.shortlink.admin.dto.resp.UserLoginRespDTO;
 import com.nageoffer.shortlink.admin.dto.resp.UserRespDTO;
 import com.nageoffer.shortlink.admin.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
@@ -37,6 +38,7 @@ import static com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum.USER_
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
 
 
@@ -44,8 +46,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     private RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
     @Autowired
     private RedissonClient redissonClient;
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+
+    private final StringRedisTemplate redisTemplate;
 
     @Override
     public UserRespDTO getUserByUsername(String username) {
@@ -149,7 +151,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
         String token = UUID.randomUUID().toString();
         redisTemplate.opsForHash().put("login_"+requestParam.getUsername(),token, JSON.toJSONString(userDO));
-        redisTemplate.expire("login_"+requestParam.getUsername(),30L, TimeUnit.MINUTES);
+        redisTemplate.expire("login_"+requestParam.getUsername(),30L, TimeUnit.DAYS);
         return new UserLoginRespDTO(token);
 
     }
