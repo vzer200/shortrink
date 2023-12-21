@@ -23,14 +23,14 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 import static com.nageoffer.shortlink.admin.common.constant.RedisCacheConstant.LOCK_USER_REGISTER_KEY;
-import static com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum.USER_NAME_EXIST;
-import static com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum.USER_SAVE_ERROR;
+import static com.nageoffer.shortlink.admin.common.enums.UserErrorCodeEnum.*;
 
 
 /**
@@ -96,11 +96,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
         try {
             if (lock.tryLock()) {
-                //用户名不存在 将用户名存入数据库
-                int insert = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
-                if (insert < 1) {
-                    throw new ClientException(USER_SAVE_ERROR);
+                try{
+                    //用户名不存在 将用户名存入数据库
+                    int insert = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
+                    if (insert < 1) {
+                        throw new ClientException(USER_SAVE_ERROR);
+                    }
+                }catch (DuplicateKeyException ex){
+                    throw new ClientException(USER_EXIST);
                 }
+
                 userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
                 return;
             }

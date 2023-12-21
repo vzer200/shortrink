@@ -63,7 +63,7 @@ public class UserController {
     /**
      * 注册用户
      */
-    @PostMapping("/api/shortlin/admink/v1/user")
+    @PostMapping("/api/shortlink/admin/v1/user")
     public Result<Void> register(@RequestBody UserRegisterReqDto requestParam){
 
         userService.register(requestParam);
