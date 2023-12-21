@@ -94,6 +94,12 @@ public class UserController {
     }
 
 
+    /**
+     * 检查用户是否登录
+     * @param username
+     * @param token
+     * @return
+     */
 
     @GetMapping("/api/shortlink/admin/v1/user/check-login")
     public Result<Boolean> checkLogin(@RequestParam("username") String username,
@@ -103,6 +109,12 @@ public class UserController {
     }
 
 
+    /**
+     * 退出登录
+     * @param username
+     * @param token
+     * @return
+     */
     @DeleteMapping("/api/shortlink/admin/v1/user/logout")
     public Result<Void> logout(@RequestParam("username") String username,
                                       @RequestParam("token") String token){
