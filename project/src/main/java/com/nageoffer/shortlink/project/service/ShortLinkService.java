@@ -12,7 +12,6 @@ import com.nageoffer.shortlink.project.dto.resp.ShortLinkPageRespDTO;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,5 +47,5 @@ public interface ShortLinkService extends IService<ShortLinkDO> {
     List<ShortLinkGroupCountQueryRespDTO> listGroupShortLinkCount(List<String> requestParam);
 
 
-    void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) throws IOException;
+    void restoreUrl(String shortUri, ServletRequest request, ServletResponse response);
 }
