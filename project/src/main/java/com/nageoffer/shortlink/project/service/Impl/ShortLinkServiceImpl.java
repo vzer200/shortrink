@@ -166,7 +166,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
         //组合方案 空值判断 判断请求key是否存在空值
         String gotoIsNullShortLink = stringRedisTemplate.opsForValue().get(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, fullShortUrl));
         if (StrUtil.isNotBlank(gotoIsNullShortLink)) {
-            //如果不为空
+            //如果不为空 代表是空值
             ((HttpServletResponse) response).sendRedirect("/page/notfound");
             return;
         }
