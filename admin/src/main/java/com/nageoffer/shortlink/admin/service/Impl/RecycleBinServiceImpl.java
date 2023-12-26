@@ -14,6 +14,7 @@ import com.nageoffer.shortlink.admin.remote.ShortLinkRemoteService;
 import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
 import com.nageoffer.shortlink.admin.service.RecycleBinService;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,12 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+
 public class RecycleBinServiceImpl implements RecycleBinService {
 
 
-    private final GroupMapper groupMapper;
+    @Resource
+    private  GroupMapper groupMapper;
 
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService() {
 
