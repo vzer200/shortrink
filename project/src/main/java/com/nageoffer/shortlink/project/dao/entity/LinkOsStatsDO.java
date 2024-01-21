@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * 地区统计访问实体
+ * 操作系统统计访问实体
  *
  */
 @Data
-@TableName("t_link_locale_stats")
+@TableName("t_link_os_stats")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkLocaleStatsDO extends BaseDO {
+public class LinkOsStatsDO extends BaseDO {
 
     /**
      * id
@@ -46,22 +46,7 @@ public class LinkLocaleStatsDO extends BaseDO {
     private Integer cnt;
 
     /**
-     * 省份名称
+     * 操作系统
      */
-    private String province;
-
-    /**
-     * 市名称
-     */
-    private String city;
-
-    /**
-     * 城市编码
-     */
-    private String adcode;
-
-    /**
-     * 国家标识
-     */
-    private String country;
+    private String os;
 }
