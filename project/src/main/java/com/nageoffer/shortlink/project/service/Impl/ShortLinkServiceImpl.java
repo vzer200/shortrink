@@ -292,7 +292,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
             String localeResultStr = HttpUtil.get(AMAP_REMOTE_URL, localeParamMap);
             JSONObject localeResultObj = JSON.parseObject(localeResultStr);
             String infoCode = localeResultObj.getString("infocode");
-            if (StrUtil.isNotBlank(infoCode) && StrUtil.equals("10000", infoCode)) {
+            if (StrUtil.isNotBlank(infoCode) && StrUtil.equals(infoCode, "10000")) {
                 //infoCode不为空且返回正常值
                 String province = localeResultObj.getString("province");
                 boolean unknownFlag = StrUtil.equals(province, "[]");
@@ -306,7 +306,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .gid(gid)
                         .date(new Date())
                         .build();
-                linkLocaleStatsMapper.shortLinkLocaleStats(linkLocaleStatsDO);
+                linkLocaleStatsMapper.shortLinkLocaleState(linkLocaleStatsDO);
                 String os = LinkUtil.getOs(((HttpServletRequest) request));
                 LinkOsStatsDO linkOsStatsDO = LinkOsStatsDO.builder()
                         .fullShortUrl(fullShortUrl)
@@ -315,7 +315,7 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .gid(gid)
                         .date(new Date())
                         .build();
-                linkOsStatsMapper.shortLinkOsStats(linkOsStatsDO);
+                linkOsStatsMapper.shortLinkOsState(linkOsStatsDO);
                 String browser = LinkUtil.getBrowser(((HttpServletRequest) request));
                 LinkBrowserStatsDO linkBrowserStatsDO = LinkBrowserStatsDO.builder()
                         .browser(browser)

@@ -10,16 +10,14 @@ import com.nageoffer.shortlink.admin.remote.dto.req.RecycleBinRemoveReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.req.RecycleBinSaveReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.req.ShortLinkRecycleBinPageReqDTO;
 import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkPageRespDTO;
+import com.nageoffer.shortlink.admin.remote.dto.resp.ShortLinkStatsRespDTO;
 import com.nageoffer.shortlink.admin.service.RecycleBinService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-public class RecycleBinBinController {
+public class RecycleBinController {
 
     ShortLinkRemoteService shortLinkRemoteService = new ShortLinkRemoteService(){
 
@@ -70,5 +68,23 @@ public class RecycleBinBinController {
         shortLinkRemoteService.removeRecycleBin(requestParam);
         return Results.success();
     }
+
+    /**
+     * 访问单个短链接指定时间内监控数据
+     *
+     * @param fullShortUrl 完整短链接
+     * @param gid          分组标识
+     * @param startDate    开始时间
+     * @param endDate      结束时间
+     * @return 短链接监控信息
+     */
+    @GetMapping("/api/short-link/v1/stats")
+    public Result<ShortLinkStatsRespDTO> oneShortLinkStats(@RequestParam("fullShortUrl") String fullShortUrl,
+                                                           @RequestParam("gid") String gid,
+                                                           @RequestParam("startDate") String startDate,
+                                                           @RequestParam("endDate") String endDate) {
+        return null;
+    }
+
 
 }
