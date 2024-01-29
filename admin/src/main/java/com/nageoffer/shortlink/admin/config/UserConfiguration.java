@@ -15,10 +15,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 public class UserConfiguration {
 
 
-/**
+    /**
      * 用户信息传递过滤器
      */
-
     @Bean
     public FilterRegistrationBean<UserTransmitFilter> globalUserTransmitFilter(StringRedisTemplate stringRedisTemplate) {
         FilterRegistrationBean<UserTransmitFilter> registration = new FilterRegistrationBean<>();
