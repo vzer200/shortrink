@@ -1,9 +1,6 @@
 package com.nageoffer.shortlink.admin.remote.dto.resp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * 短链接分页返回参数
@@ -12,61 +9,34 @@ import java.util.Date;
 public class ShortLinkPageRespDTO {
 
     /**
-     * id
+     * 历史PV
      */
-    private Long id;
+    private Integer totalPv;
 
     /**
-     * 域名
+     * 今日PV
      */
-    private String domain;
+    private Integer todayPv;
 
     /**
-     * 短链接
+     * 历史UV
      */
-    private String shortUri;
+    private Integer totalUv;
 
     /**
-     * 完整短链接
+     * 今日UV
      */
-    private String fullShortUrl;
+    private Integer todayUv;
 
     /**
-     * 原始链接
+     * 历史UIP
      */
-    private String originUrl;
+    private Integer totalUip;
 
     /**
-     * 分组标识
+     * 今日UIP
      */
-    private String gid;
-
-    /**
-     * 有效期类型 0：永久有效 1：自定义
-     */
-    private Integer validDateType;
-
-    /**
-     * 有效期
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date validDate;
-
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createTime;
-
-    /**
-     * 描述
-     */
-    private String describe;
-
-    /**
-     * 网站标识
-     */
-    private String favicon;
+    private Integer todayUip;
 
 
 }
