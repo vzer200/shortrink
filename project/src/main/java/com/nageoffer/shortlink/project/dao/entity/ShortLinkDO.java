@@ -13,12 +13,10 @@ import java.util.Date;
  * 短链接实体
  */
 @Data
+@Builder
 @TableName("t_link")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class ShortLinkDO extends BaseDO {
 
     /**
