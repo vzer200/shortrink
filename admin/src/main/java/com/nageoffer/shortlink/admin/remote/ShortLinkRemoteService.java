@@ -23,22 +23,7 @@ public interface ShortLinkRemoteService {
 
 
 
-    /**
-     * 分页查询短链接
-     * @param requestParam
-     * @return
-     */
-    default Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam) {
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("gid",requestParam.getGid());
-        requestMap.put("orderTag",requestParam.getOrderTag());
-        requestMap.put("current",requestParam.getCurrent());
-        requestMap.put("size",requestParam.getSize());
-        String resultPageStr = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/page", requestMap);
 
-        return JSON.parseObject(resultPageStr, new TypeReference<>() {
-        });
-    }
 
 
     /**
@@ -48,6 +33,18 @@ public interface ShortLinkRemoteService {
      */
     default Result<ShortLinkCreatRespDTO> creatShortLink(ShortLinkCreatReqDTO requestParam) {
         String resultBodyStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/create", JSON.toJSONString(requestParam));
+        return JSON.parseObject(resultBodyStr, new TypeReference<>() {
+        });
+    }
+
+
+    /**
+     * 创建短链接
+     * @param requestParam
+     * @return
+     */
+    default Result<ShortLinkBatchCreateRespDTO> batchCreateShortLink(ShortLinkBatchCreateReqDTO requestParam){
+        String resultBodyStr = HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/create/batch", JSON.toJSONString(requestParam));
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
     }
@@ -75,6 +72,23 @@ public interface ShortLinkRemoteService {
      */
     default void updateShortLink(ShortLinkUpdateReqDTO requestParam){
         HttpUtil.post("http://127.0.0.1:8001/api/shortlink/v1/update", JSON.toJSONString(requestParam));
+    }
+
+    /**
+     * 分页查询短链接
+     * @param requestParam
+     * @return
+     */
+    default Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("gid",requestParam.getGid());
+        requestMap.put("orderTag",requestParam.getOrderTag());
+        requestMap.put("current",requestParam.getCurrent());
+        requestMap.put("size",requestParam.getSize());
+        String resultPageStr = HttpUtil.get("http://127.0.0.1:8001/api/shortlink/v1/page", requestMap);
+
+        return JSON.parseObject(resultPageStr, new TypeReference<>() {
+        });
     }
 
 
@@ -185,6 +199,7 @@ public interface ShortLinkRemoteService {
         return JSON.parseObject(resultBodyStr, new TypeReference<>() {
         });
     }
+
 
 
 
