@@ -157,7 +157,6 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                 ShortLinkBaseInfoRespDTO linkBaseInfoRespDTO = ShortLinkBaseInfoRespDTO.builder()
                         .fullShortUrl(shortLink.getFullShortUrl())
                         .originUrl(originUrls.get(i))
-                        .originUrl(shortLink.getOriginUrl())
                         .describe(describes.get(i))
                         .build();
                 result.add(linkBaseInfoRespDTO);
