@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.text.StrBuilder;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
@@ -81,20 +82,34 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     @Value("${short-link.stats.locale.amap-key}")
     private String statsLocaleAmapKey;
 
+    @Value("${short-link.domain.default}")
+    private String createShortLinkDefaultDomain;
+
     @Override
     public ShortLinkCreatRespDTO createShortLink(ShortLinkCreatReqDTO requestParam) {
 
         String shortLinkSuffix = generateSuffix(requestParam);
+        String fullShortUrl = StrBuilder.create(createShortLinkDefaultDomain)
+                .append("/")
+                .append(shortLinkSuffix)
+                .toString();
 
-        String fullShortUrl = requestParam.getDomain() + "/" + shortLinkSuffix;
-        ShortLinkDO shortLinkDO = BeanUtil.toBean(requestParam, ShortLinkDO.class);
-        shortLinkDO.setShortUri(shortLinkSuffix);
-        shortLinkDO.setEnableStatus(0);
-        shortLinkDO.setFullShortUrl(fullShortUrl);
-        shortLinkDO.setFavicon(getFavicon(requestParam.getOriginUrl()));
-        shortLinkDO.setTotalPv(0);
-        shortLinkDO.setTotalUv(0);
-        shortLinkDO.setTotalUip(0);
+        ShortLinkDO shortLinkDO = ShortLinkDO.builder()
+                .domain(createShortLinkDefaultDomain)
+                .originUrl(requestParam.getOriginUrl())
+                .gid(requestParam.getGid())
+                .createdType(requestParam.getCreatedType())
+                .validDate(requestParam.getValidDate())
+                .validDateType(requestParam.getValidDateType())
+                .describe(requestParam.getDescribe())
+                .shortUri(shortLinkSuffix)
+                .enableStatus(0)
+                .totalPv(0)
+                .totalUv(0)
+                .totalUip(0)
+                .fullShortUrl(fullShortUrl)
+                .favicon(getFavicon(requestParam.getOriginUrl()))
+                .build();
 
         ShortLinkGotoDO shortLinkGotoDO = ShortLinkGotoDO.builder()
                 .fullShortUrl(fullShortUrl)
@@ -158,7 +173,12 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     public void restoreUrl(String shortUri, ServletRequest request, ServletResponse response) {
 
         String serverName = request.getServerName();
-        String fullShortUrl = serverName + "/" + shortUri;
+        String serverPort = Optional.of(request.getServerPort())
+                .filter(each -> !Objects.equals(each, 80))
+                .map(String::valueOf)
+                .map(each -> ":" + each)
+                .orElse("");
+        String fullShortUrl = serverName + serverPort + "/" + shortUri;
 
         //解决缓存击穿问题
         //双重判定锁 节省数据库响应  分布式锁是挨个来的 拿到锁之后再执行一次逻辑 如果缓存中有数据就
@@ -355,10 +375,10 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .browser(browser)
                         .network(network)
                         .device(device)
-                        .locale(StrUtil.join("-","中国",actualProvince ,actualCity))
+                        .locale(StrUtil.join("-", "中国", actualProvince, actualCity))
                         .build();
                 linkAccessLogsMapper.insert(linkAccessLogsDO);
-                baseMapper.incrementStats(gid,fullShortUrl,1,uvFirstFlag.get() ? 1 : 0,uipFirstFlag ? 1 : 0);
+                baseMapper.incrementStats(gid, fullShortUrl, 1, uvFirstFlag.get() ? 1 : 0, uipFirstFlag ? 1 : 0);
 
                 LinkStatsTodayDO linkStatsTodayDO = LinkStatsTodayDO.builder()
                         .todayPv(1)
