@@ -35,7 +35,7 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @PostMapping("/api/shortlink/admin/v1/create")
+    @PostMapping("/api/short-link/admin/v1/create")
     public Result<ShortLinkCreatRespDTO> creatShortLink(@RequestBody ShortLinkCreatReqDTO requestParam) {
 
         return shortLinkRemoteService.creatShortLink(requestParam);
@@ -47,7 +47,7 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @PostMapping("/api/shortlink/admin/v1/create/batch")
+    @PostMapping("/api/short-link/admin/v1/create/batch")
     @SneakyThrows
     public void creatShortLink(@RequestBody ShortLinkBatchCreateReqDTO requestParam, HttpServletResponse response) {
         Result< ShortLinkBatchCreateRespDTO> shortLinkBatchCreateRespDTOResult = shortLinkRemoteService.batchCreateShortLink(requestParam);
@@ -63,7 +63,7 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @PostMapping("/api/shortlink/admin/v1/update")
+    @PostMapping("/api/short-link/admin/v1/update")
     public Result<Void> updateShortLink(@RequestBody ShortLinkUpdateReqDTO requestParam) {
         shortLinkRemoteService.updateShortLink(requestParam);
         return Results.success();
@@ -75,7 +75,7 @@ public class ShortLinkController {
      * @param requestParam
      * @return
      */
-    @GetMapping("/api/shortlink/admin/v1/page")
+    @GetMapping("/api/short-link/admin/v1/page")
     public Result<IPage<ShortLinkPageRespDTO>> pageShortLink(ShortLinkPageReqDTO requestParam){
         return shortLinkRemoteService.pageShortLink(requestParam);
     }

@@ -1,4 +1,4 @@
-package com.nageoffer.shortlink.project.controller;
+package com.nageoffer.shortlink.project.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
