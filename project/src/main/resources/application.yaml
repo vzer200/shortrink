@@ -20,10 +20,18 @@ spring:
 short-link:
   domain:
     default: nurl.ink:8001
-
   stats:
    locale:
      amap-key: c5af477317639f74a9d1c406cf0d3eec
+   goto-domain:
+     white-list:
+       enable: true
+       names: '拿个offer,知乎,掘金,博客园'
+       details:
+         - nageoffer.com
+         - zhihu.com
+         - juejin.cn
+         - cnblogs.com
 
 
 
