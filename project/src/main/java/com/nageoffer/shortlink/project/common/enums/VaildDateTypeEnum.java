@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum ValidDateTypeEnum {
+public enum VaildDateTypeEnum {
 
     /**
      * 永久有效期
