@@ -145,29 +145,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if (userDO == null) {
             throw new ClientException("用户不存在");
         }
-
-        Map<Object, Object> hasLoginMap = redisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
+        Map<Object ,Object> hasLoginMap = redisTemplate.opsForHash().entries("login_" + requestParam.getUsername());
         if (CollUtil.isNotEmpty(hasLoginMap)) {
-            String token = hasLoginMap.keySet().stream().
-                    findFirst()
+            String token = hasLoginMap.keySet().stream()
+                    .findFirst()
                     .map(Object::toString)
                     .orElseThrow(() -> new ClientException("用户登录错误"));
             return new UserLoginRespDTO(token);
         }
-
         /**
          * Hash
-         * key:login_用户名
-         * Value:
-         * key:token标识
-         * val:json字符串（用户信息）
+         * Key：login_用户名
+         * Value：
+         *  Key：token标识
+         *  Val：JSON 字符串（用户信息）
          */
-
-        String token = UUID.randomUUID().toString();
-        redisTemplate.opsForHash().put("login_" + requestParam.getUsername(), token, JSON.toJSONString(userDO));
-        redisTemplate.expire("login_" + requestParam.getUsername(), 30L, TimeUnit.DAYS);
-        return new UserLoginRespDTO(token);
-
+        String uuid = UUID.randomUUID().toString();
+        redisTemplate.opsForHash().put("login_" + requestParam.getUsername(), uuid, JSON.toJSONString(userDO));
+        redisTemplate.expire("login_" + requestParam.getUsername(), 30L, TimeUnit.MINUTES);
+        return new UserLoginRespDTO(uuid);
     }
 
     @Override
