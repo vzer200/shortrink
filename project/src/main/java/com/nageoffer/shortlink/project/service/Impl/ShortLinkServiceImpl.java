@@ -16,7 +16,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nageoffer.shortlink.project.common.convention.exception.ClientException;
 import com.nageoffer.shortlink.project.common.convention.exception.ServiceException;
 import com.nageoffer.shortlink.project.common.enums.VaildDateTypeEnum;
-import com.nageoffer.shortlink.project.controller.GotoDomainWhiteListConfiguration;
+import com.nageoffer.shortlink.project.config.GotoDomainWhiteListConfiguration;
 import com.nageoffer.shortlink.project.dao.entity.*;
 import com.nageoffer.shortlink.project.dao.mapper.*;
 import com.nageoffer.shortlink.project.dto.biz.ShortLinkStatsRecordDTO;
@@ -166,8 +166,8 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
                         .describe(describes.get(i))
                         .build();
                 result.add(linkBaseInfoRespDTO);
-            }catch (Throwable ex){
-                log.error("批量创建短链接失败,原始参数: {}",originUrls.get(i));
+            } catch (Throwable ex) {
+                log.error("批量创建短链接失败,原始参数: {}", originUrls.get(i));
             }
         }
         return ShortLinkBatchCreateRespDTO.builder()
@@ -179,11 +179,11 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
 
     @Override
     public void shortLinkStats(String fullShortUrl, String gid, ShortLinkStatsRecordDTO statsRecord) {
-       Map<String,String> producerMap = new HashMap<>();
-       producerMap.put("fullShortUrl",fullShortUrl);
-       producerMap.put("gid",gid);
-       producerMap.put("statsRecord", JSON.toJSONString(statsRecord));
-       shortLinkStatsSaveProducer.send(producerMap);
+        Map<String, String> producerMap = new HashMap<>();
+        producerMap.put("fullShortUrl", fullShortUrl);
+        producerMap.put("gid", gid);
+        producerMap.put("statsRecord", JSON.toJSONString(statsRecord));
+        shortLinkStatsSaveProducer.send(producerMap);
     }
 
 
@@ -501,16 +501,16 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
 
         //总之就是先判断旧的短链接是否过期,然后服务端发生了改变,将request的有效期改成了永久的或者在当前时间之后的,为了确保能够顺利跳转,删除缓存
         //如果不删除缓存的话,仍旧会跳转到404
-        if(!Objects.equals(hasShortLinkDO.getValidDateType(),requestParam.getValidDateType())||
-                !Objects.equals(hasShortLinkDO.getValidDate(),requestParam.getValidDate())) {
+        if (!Objects.equals(hasShortLinkDO.getValidDateType(), requestParam.getValidDateType()) ||
+                !Objects.equals(hasShortLinkDO.getValidDate(), requestParam.getValidDate())) {
             //有效期类型不相同或者有效期时间不相同
-            stringRedisTemplate.delete(String.format(GOTO_SHORT_LINK_KEY,requestParam.getFullShortUrl()));
-            if (hasShortLinkDO.getValidDate() !=null && hasShortLinkDO.getValidDate().before(new Date())){
+            stringRedisTemplate.delete(String.format(GOTO_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
+            if (hasShortLinkDO.getValidDate() != null && hasShortLinkDO.getValidDate().before(new Date())) {
                 //hasShortLinkDO的有过期时间且过期了
-                if (Objects.equals(requestParam.getValidDateType(),VaildDateTypeEnum.PERMANENT.getType())
-                ||requestParam.getValidDate().after(new Date())){
+                if (Objects.equals(requestParam.getValidDateType(), VaildDateTypeEnum.PERMANENT.getType())
+                        || requestParam.getValidDate().after(new Date())) {
                     //requestParam的有效期是永久有效或者有效期在当前时间之后
-                    stringRedisTemplate.delete(String.format(GOTO_IS_NULL_SHORT_LINK_KEY,requestParam.getFullShortUrl()));
+                    stringRedisTemplate.delete(String.format(GOTO_IS_NULL_SHORT_LINK_KEY, requestParam.getFullShortUrl()));
                 }
             }
 
@@ -558,18 +558,18 @@ public class ShortLinkServiceImpl extends ServiceImpl<ShortLinkMapper, ShortLink
     }
 
 
-    private void verificationWhitelist(String originUrl){
+    private void verificationWhitelist(String originUrl) {
         Boolean enable = gotoDomainWhiteListConfiguration.getEnable();
-        if (enable ==null || !enable){
+        if (enable == null || !enable) {
             return;
         }
         String domain = LinkUtil.extractDomain(originUrl);
-        if (StrUtil.isBlank(domain)){
+        if (StrUtil.isBlank(domain)) {
             throw new ClientException("跳转链接填写错误");
         }
         List<String> details = gotoDomainWhiteListConfiguration.getDetails();
-        if (!details.contains(domain)){
-            throw  new ClientException("演示环境为避免恶意攻击,请生成以下网页跳转链接: "+gotoDomainWhiteListConfiguration.getNames());
+        if (!details.contains(domain)) {
+            throw new ClientException("演示环境为避免恶意攻击,请生成以下网页跳转链接: " + gotoDomainWhiteListConfiguration.getNames());
         }
     }
 

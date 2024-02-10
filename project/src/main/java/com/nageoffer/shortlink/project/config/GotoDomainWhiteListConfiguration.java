@@ -1,4 +1,4 @@
-package com.nageoffer.shortlink.project.controller;
+package com.nageoffer.shortlink.project.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "short-link.goto-domain.white-list")
+@ConfigurationProperties(prefix = "short-link.stats.goto-domain.white-list")
 public class GotoDomainWhiteListConfiguration {
 
     /**
