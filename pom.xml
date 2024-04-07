@@ -26,11 +26,14 @@
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <dozer-core.version>6.5.2</dozer-core.version>
         <hutool-all.version>5.8.20</hutool-all.version>
-        <redisson.version>3.21.3</redisson.version>
+        <redisson.version>3.27.2</redisson.version>
         <guava.version>30.0-jre</guava.version>
         <jsoup.version>1.15.3</jsoup.version>
         <easyexcel.version>3.1.3</easyexcel.version>
+        <rocketmq-spring-boot-starter.version>2.2.3</rocketmq-spring-boot-starter.version>
+        <spotless-maven-plugin.version>2.22.1</spotless-maven-plugin.version>
     </properties>
+
 
     <dependencyManagement>
         <dependencies>
@@ -106,7 +109,11 @@
                 <version>${guava.version}</version>
             </dependency>
 
-
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq-spring-boot-starter.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
